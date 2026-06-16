@@ -1,0 +1,65 @@
+<div class="portal-wrapper">
+  <div class="login-card">
+    <div class="brand-header">
+      <img src="/logo.png" alt="VITAL NEXUS Logo" class="brand-logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2966/2966327.png'">
+      <h2>VITAL<span>NEXUS</span></h2>
+      <p>Sistema Nacional de Historial Clínico Unificado</p>
+    </div>
+
+    <div class="role-toggle">
+      <button 
+        class="toggle-btn" 
+        [class.active]="rolActivo === 'paciente'" 
+        (click)="setRol('paciente')">
+        <i class="icon-user"></i> Soy Paciente
+      </button>
+      <button 
+        class="toggle-btn" 
+        [class.active]="rolActivo === 'medico'" 
+        (click)="setRol('medico')">
+        <i class="icon-stethoscope"></i> Soy Médico
+      </button>
+    </div>
+
+    <form class="auth-form" (ngSubmit)="autenticar()">
+      
+      <div class="form-group">
+        <label *ngIf="rolActivo === 'paciente'">CURP o Número de Seguro Social</label>
+        <label *ngIf="rolActivo === 'medico'">Identificador Médico (ID / Cédula)</label>
+        <input 
+          type="text" 
+          [(ngModel)]="credenciales.identificador" 
+          name="identificador" 
+          class="form-control" 
+          [placeholder]="rolActivo === 'paciente' ? 'Ej. GOME890525H...' : 'Ej. MED-3421aa75...'"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label>Contraseña de Acceso</label>
+        <input 
+          type="password" 
+          [(ngModel)]="credenciales.password" 
+          name="password" 
+          class="form-control" 
+          placeholder="••••••••"
+          required>
+      </div>
+
+      <div class="form-options">
+        <label class="remember-me">
+          <input type="checkbox"> Recordar mi sesión
+        </label>
+        <a href="#" class="forgot-pwd">¿Olvidaste tu contraseña?</a>
+      </div>
+
+      <button type="submit" class="btn btn-submit" [ngClass]="rolActivo === 'paciente' ? 'btn-paciente' : 'btn-medico'">
+        Ingresar al Portal {{ rolActivo === 'paciente' ? 'Personal' : 'Clínico' }}
+      </button>
+    </form>
+    
+    <div class="security-badge">
+      <span>Conexión cifrada de extremo a extremo. Accediendo al Nodo de Balanceo más cercano.</span>
+    </div>
+  </div>
+</div>

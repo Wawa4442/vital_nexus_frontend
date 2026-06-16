@@ -1,0 +1,55 @@
+<div class="vital-nexus-container layout-grid">
+  <section class="map-section">
+    <header class="section-header">
+      <h2>Geolocalización Sanitaria</h2>
+      <p>Centros de salud, farmacias y zonas de riesgo cercanas.</p>
+    </header>
+    
+    <div class="map-container">
+      <img src="https://assets.website-files.com/5e832e12eb7ca02ee9064d42/5f7db426b676b95755fb2844_Group%20805.jpg" alt="Mapa de Infraestructura Médica" class="map-placeholder">
+      
+      <div class="map-overlay">
+        <span class="badge badge-live">● Monitoreo en Tiempo Real (Nodo Centro)</span>
+      </div>
+    </div>
+
+    <div class="hospitals-list">
+      <h3>Establecimientos Cercanos</h3>
+      <div class="hospital-card" *ngFor="let hosp of hospitalesCercanos">
+        <div class="h-info">
+          <strong>{{ hosp.nombre }}</strong>
+          <span class="h-type">{{ hosp.tipo }}</span>
+        </div>
+        <div class="h-meta">
+          <span class="h-dist"><i class="icon-pin"></i> {{ hosp.distancia }}</span>
+          <span class="h-disp" [class.alta]="hosp.disponibilidad === 'Alta'">Disp: {{ hosp.disponibilidad }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alerts-section">
+    <header class="section-header">
+      <h2>Alertas Epidemiológicas</h2>
+      <p>Notificaciones basadas en análisis distribuido.</p>
+    </header>
+
+    <div class="alert-cards-container">
+      <div class="epidemic-card" *ngFor="let alerta of alertasActivas" [ngClass]="{'high-risk': alerta.nivel === 'Alto'}">
+        <div class="e-card-header">
+          <span class="e-type">{{ alerta.tipo }}</span>
+          <span class="e-date">{{ alerta.fecha }}</span>
+        </div>
+        <h3 class="e-disease">{{ alerta.enfermedad }}</h3>
+        <p class="e-zone"><i class="icon-map"></i> <strong>Zona Afectada:</strong> {{ alerta.zona }}</p>
+        <div class="e-recommendation">
+          <strong>Acción Sugerida:</strong> {{ alerta.recomendacion }}
+        </div>
+      </div>
+
+      <div class="no-alerts" *ngIf="alertasActivas.length === 0">
+        <p>No hay alertas epidemiológicas activas en tu zona en este momento.</p>
+      </div>
+    </div>
+  </section>
+</div>

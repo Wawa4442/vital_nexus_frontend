@@ -1,0 +1,53 @@
+<div class="vital-nexus-container">
+  <header class="module-header">
+    <h1>Actualización de Perfil de Supervivencia</h1>
+    <p>Mantén tus datos críticos al día. Estos serán los primeros en ser consultados en caso de un incidente.</p>
+  </header>
+
+  <div class="profile-card">
+    <div class="alert-info">
+      <i class="icon-shield"></i>
+      <span>Tu información está protegida mediante fragmentación distribuida. Solo el personal médico autorizado en situaciones de emergencia podrá acceder a esta vista rápida.</span>
+    </div>
+
+    <form class="survival-form" (ngSubmit)="guardarDatos()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Tipo de Sangre</label>
+          <select [(ngModel)]="datosSupervivencia.tipoSangre" name="sangre" class="form-control">
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="AB+">AB+</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Contacto de Emergencia</label>
+          <input type="text" [(ngModel)]="datosSupervivencia.contactoEmergencia" name="contacto" class="form-control" placeholder="Nombre y Teléfono">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Alergias Conocidas (Separadas por coma)</label>
+        <input type="text" [(ngModel)]="datosSupervivencia.alergias" name="alergias" class="form-control critical-input">
+      </div>
+
+      <div class="form-group">
+        <label>Condiciones Crónicas o Medicación Actual</label>
+        <textarea [(ngModel)]="datosSupervivencia.condiciones" name="condiciones" class="form-control" rows="3"></textarea>
+      </div>
+
+      <div class="form-group checkbox-group">
+        <input type="checkbox" id="donador" [(ngModel)]="datosSupervivencia.donadorOrganos" name="donador">
+        <label for="donador">Soy donador voluntario de órganos y tejidos</label>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Guardar y Sincronizar en Red</button>
+      </div>
+    </form>
+  </div>
+</div>

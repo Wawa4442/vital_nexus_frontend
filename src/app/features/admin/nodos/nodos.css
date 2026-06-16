@@ -1,0 +1,54 @@
+.vital-nexus-container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; font-family: 'Inter', sans-serif; }
+.module-header { margin-bottom: 2rem; border-bottom: 2px solid #2b6cb0; padding-bottom: 1rem; }
+.module-header h1 { color: #1a365d; font-size: 1.8rem; margin: 0 0 0.5rem 0; }
+.module-header p { color: #718096; margin: 0; }
+
+section { margin-bottom: 3rem; }
+h3 { color: #2d3748; font-size: 1.2rem; border-left: 4px solid #319795; padding-left: 0.8rem; margin-bottom: 1.5rem; }
+
+/* === TARJETAS DE NODOS === */
+.nodes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+.node-card { background: white; border-radius: 12px; border: 1px solid #edf2f7; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden; transition: transform 0.2s; position: relative; }
+.node-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: #38a169; }
+.node-card.warning::before { background: #dd6b20; }
+.node-card.offline::before { background: #e53e3e; }
+.node-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
+
+.node-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: #f7fafc; border-bottom: 1px solid #edf2f7; }
+.badge { background: #2b6cb0; color: white; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+
+/* Indicador con pulso */
+.status-indicator { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: #4a5568; }
+.pulse-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; position: relative; }
+.pulse-dot.online { background-color: #38a169; box-shadow: 0 0 0 0 rgba(56, 161, 105, 0.7); animation: pulse-green 2s infinite; }
+.pulse-dot.warning { background-color: #dd6b20; box-shadow: 0 0 0 0 rgba(221, 107, 32, 0.7); animation: pulse-orange 2s infinite; }
+.pulse-dot.offline { background-color: #e53e3e; }
+
+@keyframes pulse-green { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 161, 105, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(56, 161, 105, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 161, 105, 0); } }
+@keyframes pulse-orange { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(221, 107, 32, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(221, 107, 32, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(221, 107, 32, 0); } }
+
+.node-body { padding: 1.5rem; }
+.node-title { margin: 0 0 1rem 0; color: #1a365d; font-size: 1.3rem; }
+.node-meta p { margin: 0 0 0.5rem 0; font-size: 0.9rem; color: #718096; display: flex; justify-content: space-between; border-bottom: 1px dashed #edf2f7; padding-bottom: 0.3rem; }
+.node-meta span { font-weight: 600; color: #2d3748; }
+.ip-address { font-family: monospace; color: #2b6cb0 !important; }
+
+.node-metrics { display: flex; border-top: 1px solid #edf2f7; background: #fdfdfd; }
+.metric { flex: 1; padding: 1rem; display: flex; flex-direction: column; align-items: center; border-right: 1px solid #edf2f7; }
+.metric:last-child { border-right: none; }
+.m-label { font-size: 0.75rem; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.3rem; }
+.m-value { font-size: 1.2rem; font-weight: bold; color: #2d3748; }
+.text-danger { color: #e53e3e; }
+
+.node-actions { padding: 1rem; text-align: center; border-top: 1px solid #edf2f7; }
+.btn-outline { background: transparent; border: 1px solid #cbd5e0; color: #4a5568; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; transition: all 0.2s; font-weight: 600; }
+.btn-outline:hover { background: #edf2f7; color: #1a365d; }
+
+/* === TABLA DE FRAGMENTACIÓN === */
+.table-container { background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow-x: auto; border: 1px solid #edf2f7; }
+.nexus-table { width: 100%; border-collapse: collapse; }
+.nexus-table th, .nexus-table td { padding: 1rem 1.5rem; text-align: left; border-bottom: 1px solid #edf2f7; font-size: 0.95rem; }
+.nexus-table th { background-color: #f7fafc; font-weight: 600; color: #4a5568; }
+.sql-code { background: #1a202c; color: #63b3ed; padding: 0.3rem 0.6rem; border-radius: 4px; font-family: monospace; font-size: 0.85rem; }
+.tag-system { background: #ebf4ff; color: #4c51bf; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+.status-ok { color: #38a169; font-weight: bold; font-size: 0.9rem; }

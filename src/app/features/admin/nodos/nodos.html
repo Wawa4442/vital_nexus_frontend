@@ -1,0 +1,72 @@
+<div class="vital-nexus-container">
+  <header class="module-header">
+    <h1>Monitor de Topología Distribuida</h1>
+    <p>Supervisión de Nodos, Latencia de Red y Consistencia de Vistas Globales.</p>
+  </header>
+
+  <section class="topology-section">
+    <h3>Estado de Nodos Físicos</h3>
+    <div class="nodes-grid">
+      <div class="node-card" *ngFor="let nodo of nodos" [ngClass]="{'warning': nodo.estado === 'Warning', 'offline': nodo.estado === 'Offline'}">
+        <div class="node-header">
+          <div class="status-indicator">
+            <span class="pulse-dot" [ngClass]="nodo.estado.toLowerCase()"></span>
+            <strong>{{ nodo.estado }}</strong>
+          </div>
+          <span class="badge">{{ nodo.tipo }}</span>
+        </div>
+        
+        <div class="node-body">
+          <h2 class="node-title">Nodo {{ nodo.id }}: {{ nodo.region }}</h2>
+          <div class="node-meta">
+            <p><i class="icon-location"></i> Ubicación: <span>{{ nodo.ubicacion }}</span></p>
+            <p><i class="icon-server"></i> IP Servidor: <span class="ip-address">{{ nodo.ip }}</span></p>
+          </div>
+        </div>
+
+        <div class="node-metrics">
+          <div class="metric">
+            <span class="m-label">Latencia</span>
+            <span class="m-value" [class.text-danger]="nodo.latencia > 100">{{ nodo.latencia }} ms</span>
+          </div>
+          <div class="metric">
+            <span class="m-label">Consistencia (Sync)</span>
+            <span class="m-value">{{ nodo.sync }}%</span>
+          </div>
+        </div>
+
+        <div class="node-actions">
+          <button class="btn btn-sm btn-outline" (click)="forzarSincronizacion(nodo.id)">Forzar Sync</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fragmentation-section">
+    <h3>Reglas de Fragmentación Lógica (Minitérminos)</h3>
+    <p class="text-muted">Políticas actuales para la distribución de datos en PostgreSQL basadas en predicados.</p>
+    
+    <div class="table-container">
+      <table class="nexus-table">
+        <thead>
+          <tr>
+            <th>Tabla Base</th>
+            <th>Predicado / Minitérmino</th>
+            <th>Nombre Fragmento</th>
+            <th>Nodo Asignado</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let regla of reglasFragmentacion">
+            <td><strong>{{ regla.tabla }}</strong></td>
+            <td><code class="sql-code">{{ regla.predicado }}</code></td>
+            <td><span class="tag tag-system">{{ regla.fragmento }}</span></td>
+            <td>{{ regla.nodoAsignado }}</td>
+            <td><span class="status-ok">✔ Activa</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

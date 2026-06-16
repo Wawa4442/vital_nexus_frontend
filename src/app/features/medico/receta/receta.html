@@ -1,0 +1,55 @@
+<div class="vital-nexus-container">
+  <header class="module-header">
+    <h1>Emisión de Receta Electrónica</h1>
+    <p>Prescripción de fármacos vinculada al catálogo maestro nacional.</p>
+  </header>
+
+  <div class="prescription-layout">
+    <aside class="patient-context">
+      <h3>Contexto Clínico</h3>
+      <div class="context-card">
+        <div class="c-row">
+          <span class="c-label">Paciente:</span>
+          <span class="c-value">{{ pacienteActual.nombre }}</span>
+        </div>
+        <div class="c-row">
+          <span class="c-label">Diagnóstico Base:</span>
+          <span class="c-value highlight">{{ pacienteActual.diagnostico }}</span>
+        </div>
+        <div class="c-row">
+          <span class="c-label">ID Expediente:</span>
+          <span class="c-value uuid" title="{{ pacienteActual.idExpediente }}">{{ pacienteActual.idExpediente | slice:0:13 }}...</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="prescription-form-area">
+      <form class="nexus-form" (ngSubmit)="generarPrescripcion()">
+        <div class="form-group">
+          <label>Seleccionar Fármaco (Catálogo V_MEDICAMENTO)</label>
+          <select [(ngModel)]="nuevaReceta.codigo_medicamento" name="medicamento" class="form-control" required>
+            <option value="" disabled selected>-- Buscar por nombre genérico o código --</option>
+            <option *ngFor="let med of catalogoMedicamentos" [value]="med.codigo">
+              [{{ med.codigo }}] - {{ med.nombre }} <span *ngIf="med.requiereReceta">⚠️ (Controlado)</span>
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Instrucciones de Dosificación</label>
+          <textarea [(ngModel)]="nuevaReceta.instrucciones" name="instrucciones" class="form-control" rows="3" placeholder="Ej. Tomar 1 tableta cada 8 horas..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Duración del Tratamiento</label>
+          <input type="text" [(ngModel)]="nuevaReceta.duracion" name="duracion" class="form-control" placeholder="Ej. 7 días">
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline">Cancelar</button>
+          <button type="submit" class="btn btn-success"><i class="icon-file-text"></i> Firmar y Emitir Receta</button>
+        </div>
+      </form>
+    </main>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+<div class="vital-nexus-container">
+  <header class="module-header">
+    <h1>Análisis de Tendencias Clínicas</h1>
+    <p>Visualización del historial de signos vitales consolidado desde múltiples nodos.</p>
+  </header>
+
+  <div class="dashboard-grid">
+    <div class="info-panel">
+      <div class="patient-header">
+        <h3>Paciente: {{ pacienteSeleccionado }}</h3>
+        <span class="badge tag-chronic">Paciente Crónico - Hipertensión</span>
+      </div>
+      <p class="summary-text">
+        El análisis distribuido muestra una <strong>mejora del 15%</strong> en la presión arterial sistólica durante el último trimestre, coincidiendo con la prescripción continua de Enalapril.
+      </p>
+    </div>
+
+    <div class="chart-panel">
+      <h3>Evolución: Presión Arterial (Sistólica/Diastólica)</h3>
+      
+      <div class="css-chart-container">
+        <div class="y-axis">
+          <span>160</span>
+          <span>120</span>
+          <span>80</span>
+          <span>40</span>
+        </div>
+        
+        <div class="chart-area">
+          <div class="bar-group" *ngFor="let registro of historialPresion">
+            <div class="bars">
+              <div class="bar bar-sis" [style.height]="calcularAltura(registro.sistolica)" title="Sistólica: {{ registro.sistolica }}">
+                <span class="bar-val">{{ registro.sistolica }}</span>
+              </div>
+              <div class="bar bar-dia" [style.height]="calcularAltura(registro.diastolica)" title="Diastólica: {{ registro.diastolica }}">
+                <span class="bar-val">{{ registro.diastolica }}</span>
+              </div>
+            </div>
+            <span class="x-label">{{ registro.fecha }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="chart-legend">
+        <div class="legend-item"><span class="color-box bg-sis"></span> Sistólica (mmHg)</div>
+        <div class="legend-item"><span class="color-box bg-dia"></span> Diastólica (mmHg)</div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+.vital-nexus-container { max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem; font-family: 'Inter', sans-serif; }
+.module-header { margin-bottom: 2rem; border-bottom: 2px solid #319795; padding-bottom: 1rem; }
+.module-header h1 { color: #234e52; font-size: 1.8rem; margin: 0 0 0.5rem 0; }
+.module-header p { color: #718096; margin: 0; }
+
+.dashboard-grid { display: flex; flex-direction: column; gap: 2rem; }
+
+.info-panel { background: white; padding: 1.5rem; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #2b6cb0; }
+.patient-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.patient-header h3 { margin: 0; color: #1a365d; }
+.badge.tag-chronic { background: #fff5f5; color: #c53030; padding: 0.4rem 1rem; border-radius: 20px; font-weight: bold; font-size: 0.85rem; border: 1px solid #fed7d7; }
+.summary-text { color: #4a5568; line-height: 1.6; margin: 0; }
+
+/* === GRÁFICA CSS === */
+.chart-panel { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #edf2f7; }
+.chart-panel h3 { margin: 0 0 2rem 0; color: #2d3748; font-size: 1.2rem; text-align: center; }
+
+.css-chart-container { display: flex; height: 300px; padding-bottom: 2rem; position: relative; }
+
+.y-axis { display: flex; flex-direction: column; justify-content: space-between; padding-right: 1rem; color: #a0aec0; font-size: 0.85rem; border-right: 2px solid #e2e8f0; width: 40px; text-align: right; }
+
+.chart-area { flex-grow: 1; display: flex; justify-content: space-around; align-items: flex-end; padding-left: 1rem; position: relative; }
+/* Líneas guía horizontales */
+.chart-area::before { content: ''; position: absolute; top: 25%; left: 0; right: 0; border-top: 1px dashed #edf2f7; z-index: 1; }
+.chart-area::after { content: ''; position: absolute; top: 50%; left: 0; right: 0; border-top: 1px dashed #edf2f7; z-index: 1; }
+
+.bar-group { display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; z-index: 2; width: 60px; }
+.bars { display: flex; gap: 4px; align-items: flex-end; height: 100%; width: 100%; justify-content: center; }
+
+.bar { width: 20px; border-radius: 4px 4px 0 0; position: relative; transition: height 0.5s ease-out, filter 0.2s; display: flex; justify-content: center; }
+.bar:hover { filter: brightness(1.1); cursor: pointer; }
+
+.bar-sis { background: linear-gradient(to top, #c53030, #fc8181); }
+.bar-dia { background: linear-gradient(to top, #2b6cb0, #63b3ed); }
+
+.bar-val { position: absolute; top: -20px; font-size: 0.75rem; font-weight: bold; color: #4a5568; opacity: 0; transition: opacity 0.2s; }
+.bar:hover .bar-val { opacity: 1; }
+
+.x-label { margin-top: 1rem; font-weight: 600; color: #718096; font-size: 0.9rem; }
+
+/* Leyenda */
+.chart-legend { display: flex; justify-content: center; gap: 2rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #edf2f7; }
+.legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: #4a5568; font-weight: 500; }
+.color-box { width: 16px; height: 16px; border-radius: 4px; }
+.bg-sis { background-color: #c53030; }
+.bg-dia { background-color: #2b6cb0; }

@@ -1,0 +1,26 @@
+.vital-nexus-container { max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; font-family: 'Inter', sans-serif; }
+.module-header { margin-bottom: 2rem; border-bottom: 2px solid #2b6cb0; padding-bottom: 1rem; }
+.module-header h1 { color: #1a365d; font-size: 1.8rem; margin: 0 0 0.5rem 0; }
+.module-header p { color: #718096; margin: 0; }
+
+.profile-card { background: white; padding: 2.5rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #edf2f7; }
+
+.alert-info { background-color: #ebf8ff; color: #2b6cb0; padding: 1rem 1.5rem; border-radius: 8px; border-left: 4px solid #3182ce; margin-bottom: 2rem; display: flex; align-items: center; font-size: 0.9rem; font-weight: 500; line-height: 1.5; }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+.form-group { margin-bottom: 1.5rem; display: flex; flex-direction: column; }
+.form-group label { font-weight: 600; color: #4a5568; margin-bottom: 0.5rem; font-size: 0.95rem; }
+.form-control { padding: 0.8rem 1rem; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 1rem; transition: border-color 0.2s, box-shadow 0.2s; font-family: inherit; }
+.form-control:focus { outline: none; border-color: #319795; box-shadow: 0 0 0 3px rgba(49, 151, 149, 0.1); }
+
+.critical-input { border-color: #feb2b2; background-color: #fff5f5; color: #c53030; font-weight: 600; }
+.critical-input:focus { border-color: #e53e3e; box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1); }
+
+.checkbox-group { flex-direction: row; align-items: center; gap: 0.8rem; }
+.checkbox-group input[type="checkbox"] { width: 1.2rem; height: 1.2rem; accent-color: #319795; }
+.checkbox-group label { margin-bottom: 0; cursor: pointer; }
+
+.form-actions { display: flex; justify-content: flex-end; margin-top: 1rem; border-top: 1px solid #edf2f7; padding-top: 1.5rem; }
+.btn { padding: 0.8rem 1.8rem; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; font-size: 1rem; }
+.btn-primary { background-color: #2b6cb0; color: white; transition: background 0.2s; }
+.btn-primary:hover { background-color: #1e4e8c; }

@@ -1,0 +1,35 @@
+.vital-nexus-container { max-width: 1000px; margin: 2rem auto; padding: 0 1.5rem; font-family: 'Inter', sans-serif; }
+.module-header { margin-bottom: 2rem; border-bottom: 2px solid #319795; padding-bottom: 1rem; }
+.module-header h1 { color: #234e52; font-size: 1.8rem; margin: 0 0 0.5rem 0; }
+.module-header p { color: #718096; margin: 0; }
+
+.prescription-layout { display: grid; grid-template-columns: 1fr 2.5fr; gap: 2rem; }
+
+/* Aside Contexto */
+.patient-context h3 { font-size: 1.1rem; color: #2d3748; margin-bottom: 1rem; }
+.context-card { background: #f7fafc; border-left: 4px solid #319795; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.c-row { margin-bottom: 1rem; display: flex; flex-direction: column; }
+.c-row:last-child { margin-bottom: 0; }
+.c-label { font-size: 0.8rem; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.3rem; }
+.c-value { font-weight: 600; color: #2d3748; }
+.c-value.highlight { color: #c53030; }
+.c-value.uuid { font-family: monospace; font-size: 0.85rem; color: #a0aec0; }
+
+/* Formulario */
+.nexus-form { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #edf2f7; }
+.form-group { margin-bottom: 1.5rem; display: flex; flex-direction: column; }
+.form-group label { font-weight: 600; color: #4a5568; margin-bottom: 0.5rem; font-size: 0.95rem; }
+.form-control { padding: 0.8rem 1rem; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 1rem; transition: all 0.2s; font-family: inherit; }
+.form-control:focus { outline: none; border-color: #319795; box-shadow: 0 0 0 3px rgba(49, 151, 149, 0.1); }
+textarea.form-control { resize: vertical; }
+
+.form-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; border-top: 1px solid #edf2f7; padding-top: 1.5rem; }
+.btn { padding: 0.8rem 1.8rem; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; font-size: 1rem; transition: background 0.2s; }
+.btn-outline { background: transparent; border: 1px solid #cbd5e0; color: #4a5568; }
+.btn-outline:hover { background: #f7fafc; }
+.btn-success { background: #319795; color: white; }
+.btn-success:hover { background: #285e61; }
+
+@media (max-width: 768px) {
+  .prescription-layout { grid-template-columns: 1fr; }
+}
