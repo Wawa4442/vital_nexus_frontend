@@ -1,0 +1,59 @@
+<div class="vital-nexus-container">
+  <header class="patient-header">
+    <div class="patient-info">
+      <h1>Expediente Clínico Unificado</h1>
+      <h2 class="patient-name">{{ pacienteInfo.nombre }}</h2>
+      <div class="patient-meta">
+        <span class="badge">CURP/SSN: {{ pacienteInfo.curp }}</span>
+        <span><strong>Fecha Nac:</strong> {{ pacienteInfo.fechaNac }}</span>
+        <span><strong>Género:</strong> {{ pacienteInfo.genero }}</span>
+        <span><strong>Origen:</strong> {{ pacienteInfo.nodo }}</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary">Descargar Resumen (PDF)</button>
+    </div>
+  </header>
+
+  <section class="survival-data-card">
+    <h3>Datos de Supervivencia (Alta Disponibilidad)</h3>
+    <div class="grid-3">
+      <div class="data-item">
+        <span class="label">Tipo de Sangre</span>
+        <span class="value">O+</span>
+      </div>
+      <div class="data-item">
+        <span class="label">Alergias</span>
+        <span class="value critical">Penicilina</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="encounters-section">
+    <h3>Registro de Consultas</h3>
+    <div class="table-responsive">
+      <table class="nexus-table">
+        <thead>
+          <tr>
+            <th>ID Expediente</th>
+            <th>Fecha de Atención</th>
+            <th>Establecimiento</th>
+            <th>Médico Tratante</th>
+            <th>Motivo de Consulta</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let exp of expedientes">
+            <td class="uuid" title="{{ exp.id }}">{{ exp.id | slice:0:13 }}...</td>
+            <td>{{ exp.fecha }}</td>
+            <td>{{ exp.establecimiento }}</td>
+            <td>{{ exp.medico }}</td>
+            <td><span class="tag tag-warning">{{ exp.motivo }}</span></td>
+            <td><button class="btn btn-sm">Ver Receta</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

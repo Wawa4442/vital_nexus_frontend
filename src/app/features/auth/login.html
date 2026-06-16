@@ -1,0 +1,33 @@
+<div class="login-wrapper">
+  <div class="login-container">
+    <div class="login-brand">
+      <img src="/logo.png" alt="VITAL NEXUS" class="login-logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2966/2966327.png'">
+      <h2>Acceso Administrativo</h2>
+      <p>Panel de Control DBA & Infraestructura Distribuida</p>
+    </div>
+
+    <form class="login-form" (ngSubmit)="iniciarSesion()">
+      <div class="alert alert-error" *ngIf="errorMensaje">{{ errorMensaje }}</div>
+
+      <div class="form-group">
+        <label>Nombre de Usuario</label>
+        <div class="input-icon">
+          <input type="text" [(ngModel)]="credenciales.username" name="username" required placeholder="Ej. AdminNorte_01">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Contraseña</label>
+        <div class="input-icon">
+          <input type="password" [(ngModel)]="credenciales.password" name="password" required placeholder="••••••••">
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block">Autenticar Administrador</button>
+      
+      <div class="login-footer">
+        <a href="#">¿Problemas de sincronización con tu Nodo? Contacta a soporte TI.</a>
+      </div>
+    </form>
+  </div>
+</div>

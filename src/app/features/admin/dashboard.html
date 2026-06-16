@@ -1,0 +1,116 @@
+<div class="admin-layout">
+  <!-- Sidebar de Navegación DBA -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <img src="/logo.png" alt="Logo" class="sidebar-logo">
+      <h3>Panel DBA</h3>
+    </div>
+    <ul class="sidebar-menu">
+      <li class="menu-label">Gestión de Catálogos (CRUD)</li>
+      <li [class.active]="vistaActual === 'nodos'" (click)="cambiarVista('nodos')">Nodos e Infraestructura</li>
+      <li [class.active]="vistaActual === 'establecimientos'" (click)="cambiarVista('establecimientos')">Establecimientos (Hospitales)</li>
+      <li [class.active]="vistaActual === 'medicos'" (click)="cambiarVista('medicos')">Personal Médico</li>
+      <li [class.active]="vistaActual === 'medicamentos'" (click)="cambiarVista('medicamentos')">Inventario y Fármacos</li>
+      
+      <li class="menu-label">Análisis Distribuido</li>
+      <li [class.active]="vistaActual === 'reportes'" (click)="cambiarVista('reportes')">Reportes Epidemiológicos (Filtros/Joins)</li>
+    </ul>
+    <div class="sidebar-footer">
+      <button class="btn-logout" (click)="cerrarSesion()">Cerrar Sesión</button>
+    </div>
+  </aside>
+
+  <!-- Contenido Principal -->
+  <main class="main-content">
+    <header class="content-header">
+      <h2>{{ vistaActual | uppercase }}</h2>
+      <div class="admin-badge">AdminNorte_01 (Superusuario)</div>
+    </header>
+
+    <!-- VISTA 1: CRUD Genérico (Ejemplo) -->
+    <section class="crud-section" *ngIf="vistaActual !== 'reportes'">
+      <div class="toolbar">
+        <button class="btn btn-success">+ Nuevo Registro</button>
+        <input type="text" placeholder="Buscar registro..." class="search-input">
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre / Descripción</th>
+              <th>Región / Ubicación</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Datos de prueba del catálogo seleccionado</td>
+              <td>Nodo Norte</td>
+              <td>
+                <button class="btn-icon edit">Editar</button>
+                <button class="btn-icon delete">Eliminar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- VISTA 2: El Motor de Reportes y Joins (Filtros Avanzados) -->
+    <section class="reports-section" *ngIf="vistaActual === 'reportes'">
+      <div class="filter-panel">
+        <h3>Motor de Consultas Multitabla (Vistas Globales)</h3>
+        <p class="text-muted">Filtra casos cruzando Expedientes, Recetas, Hospitales y Nodos.</p>
+        
+        <form class="filter-grid" (ngSubmit)="ejecutarFiltroAvanzado()">
+          <div class="form-group">
+            <label>Diagnóstico / Enfermedad</label>
+            <input type="text" [(ngModel)]="filtros.enfermedad" name="enf" placeholder="Ej. Bronquitis">
+          </div>
+          <div class="form-group">
+            <label>Ciudad de Ocurrencia (Establecimiento)</label>
+            <input type="text" [(ngModel)]="filtros.ciudad" name="ciu" placeholder="Ej. Chicopee">
+          </div>
+          <div class="form-group">
+            <label>Fecha Desde</label>
+            <input type="date" [(ngModel)]="filtros.fechaInicio" name="fec">
+          </div>
+          <div class="form-group align-bottom">
+            <button type="submit" class="btn btn-primary w-100">Generar Cruce de Datos</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Resultados del JOIN -->
+      <div class="results-panel" *ngIf="resultadosReporte.length > 0">
+        <h3>Resultados del Análisis</h3>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Paciente</th>
+                <th>Diagnóstico</th>
+                <th>Fármaco Recetado</th>
+                <th>Hospital</th>
+                <th>Ciudad</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let res of resultadosReporte">
+                <td><strong>{{ res.paciente }}</strong></td>
+                <td><span class="tag alert">{{ res.diagnostico }}</span></td>
+                <td>{{ res.medicamento }}</td>
+                <td>{{ res.hospital }}</td>
+                <td>{{ res.ciudad }}</td>
+                <td>{{ res.fecha }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

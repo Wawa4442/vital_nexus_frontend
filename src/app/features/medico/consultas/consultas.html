@@ -1,0 +1,40 @@
+<div class="vital-nexus-container">
+  <header class="module-header">
+    <h1>Gestión de Consultas Clínicas</h1>
+    <p>Búsqueda global y registro de diagnóstico</p>
+  </header>
+
+  <!-- Buscador Global -->
+  <section class="search-section">
+    <div class="search-box">
+      <input type="text" [(ngModel)]="busquedaCurp" placeholder="Ingrese CURP/SSN del paciente para búsqueda transparente...">
+      <button class="btn btn-primary" (click)="buscarPaciente()">Buscar en Red</button>
+    </div>
+  </section>
+
+  <!-- Área de Registro (Solo visible si hay paciente) -->
+  <section class="registration-section" *ngIf="pacienteEncontrado">
+    <div class="patient-alert">
+      <strong>Paciente Activo:</strong> {{ pacienteEncontrado.nombre }} | 
+      <strong class="text-danger">Alergias:</strong> {{ pacienteEncontrado.alergias }}
+    </div>
+
+    <form class="consultation-form" (ngSubmit)="guardarConsulta()">
+      <h3>Registrar Nueva Atención Médica</h3>
+      
+      <div class="form-group">
+        <label>Motivo de Consulta</label>
+        <input type="text" [(ngModel)]="nuevaConsulta.motivo_consulta" name="motivo" required placeholder="Ej. Dolor abdominal">
+      </div>
+
+      <div class="form-group">
+        <label>Diagnóstico y Síntomas</label>
+        <textarea [(ngModel)]="nuevaConsulta.sintomas" name="sintomas" rows="4" required></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-success">Guardar y Sincronizar Nodo</button>
+      </div>
+    </form>
+  </section>
+</div>
