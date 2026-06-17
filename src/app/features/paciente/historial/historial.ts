@@ -40,8 +40,8 @@ export class Historial implements OnInit {
           // Adaptación: si el backend ya devuelve el objeto directo o un array
           this.pacienteInfo = Array.isArray(res.data) ? res.data[0] : res.data;
 
-          if (this.pacienteInfo && this.pacienteInfo.id_paciente) {
-            this.cargarExpedientes(this.pacienteInfo.id_paciente);
+          if (this.pacienteInfo && this.pacienteInfo.curp_ssn) {
+            this.cargarExpedientes(this.pacienteInfo.curp_ssn);
           } else {
             this.error = 'El expediente unificado no pudo ser procesado.';
           }
