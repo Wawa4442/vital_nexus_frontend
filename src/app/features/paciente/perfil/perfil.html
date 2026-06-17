@@ -1,52 +1,55 @@
 <div class="vital-nexus-container">
   <header class="module-header">
     <h1>Actualización de Perfil de Supervivencia</h1>
-    <p>Mantén tus datos críticos al día. Estos serán los primeros en ser consultados en caso de un incidente.</p>
+    <p *ngIf="pacienteInfo" style="color: #495057;">
+      Paciente Activo: <strong style="color: #212529;">{{ pacienteInfo.nombre }} {{ pacienteInfo.apellido }}</strong> 
+      <span class="badge" style="background: #e2e8f0; color: #495057; margin-left: 10px; padding: 3px 8px; border-radius: 4px;">NSS: {{ pacienteInfo.curp_ssn }}</span>
+    </p>
   </header>
 
-  <div class="profile-card">
-    <div class="alert-info">
-      <i class="icon-shield"></i>
-      <span>Tu información está protegida mediante fragmentación distribuida. Solo el personal médico autorizado en situaciones de emergencia podrá acceder a esta vista rápida.</span>
+  <div *ngIf="cargando" class="loading-state" style="text-align: center; padding: 3rem;">
+    <p>Desencriptando perfil del paciente...</p>
+  </div>
+
+  <div class="alert alert-error" *ngIf="mensajeError" style="color: #dc3545; background-color: #f8d7da; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+    {{ mensajeError }}
+  </div>
+  <div class="alert alert-success" *ngIf="mensajeExito" style="color: #0f5132; background-color: #d1e7dd; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+    {{ mensajeExito }}
+  </div>
+
+  <div class="profile-card" *ngIf="!cargando && pacienteInfo">
+    <div class="alert-info" style="background: #cff4fc; color: #055160; padding: 15px; border-radius: 6px; border-left: 4px solid #0dcaf0; margin-bottom: 20px;">
+      <strong>Seguridad VITAL NEXUS:</strong> Tu información está protegida mediante fragmentación distribuida. Solo el personal médico en situaciones de emergencia accederá a esta vista rápida.
     </div>
 
     <form class="survival-form" (ngSubmit)="guardarDatos()">
-      <div class="form-grid">
+      <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px;">
+        
         <div class="form-group">
-          <label>Tipo de Sangre</label>
-          <select [(ngModel)]="datosSupervivencia.tipoSangre" name="sangre" class="form-control">
-            <option value="O+">O+</option>
-            <option value="O-">O-</option>
-            <option value="A+">A+</option>
-            <option value="A-">A-</option>
-            <option value="B+">B+</option>
-            <option value="AB+">AB+</option>
+          <label style="display: block; margin-bottom: 5px; font-weight: bold;">Tipo de Sangre</label>
+          <select [(ngModel)]="datosSupervivencia.tipoSangre" name="sangre" class="form-control" [disabled]="guardando" style="width: 100%; padding: 10px;">
+            <option value="O+">O+</option> <option value="O-">O-</option>
+            <option value="A+">A+</option> <option value="A-">A-</option>
+            <option value="B+">B+</option> <option value="AB+">AB+</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label>Contacto de Emergencia</label>
-          <input type="text" [(ngModel)]="datosSupervivencia.contactoEmergencia" name="contacto" class="form-control" placeholder="Nombre y Teléfono">
+          <label style="display: block; margin-bottom: 5px; font-weight: bold;">Contacto de Emergencia</label>
+          <input type="text" [(ngModel)]="datosSupervivencia.contactoEmergencia" name="contacto" class="form-control" placeholder="Nombre y Teléfono" [disabled]="guardando" style="width: 100%; padding: 10px; box-sizing: border-box;">
         </div>
       </div>
 
-      <div class="form-group">
-        <label>Alergias Conocidas (Separadas por coma)</label>
-        <input type="text" [(ngModel)]="datosSupervivencia.alergias" name="alergias" class="form-control critical-input">
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #dc3545;">Alergias Conocidas (Críticas)</label>
+        <input type="text" [(ngModel)]="datosSupervivencia.alergias" name="alergias" class="form-control critical-input" [disabled]="guardando" style="width: 100%; padding: 10px; box-sizing: border-box; border: 2px solid #f5c2c7; background-color: #fffafb;">
       </div>
 
-      <div class="form-group">
-        <label>Condiciones Crónicas o Medicación Actual</label>
-        <textarea [(ngModel)]="datosSupervivencia.condiciones" name="condiciones" class="form-control" rows="3"></textarea>
-      </div>
-
-      <div class="form-group checkbox-group">
-        <input type="checkbox" id="donador" [(ngModel)]="datosSupervivencia.donadorOrganos" name="donador">
-        <label for="donador">Soy donador voluntario de órganos y tejidos</label>
-      </div>
-
-      <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Guardar y Sincronizar en Red</button>
+      <div class="form-actions" style="text-align: right;">
+        <button type="submit" class="btn btn-primary" [disabled]="guardando" style="padding: 10px 20px;">
+          {{ guardando ? 'Propagando cambios en la red...' : 'Guardar y Sincronizar' }}
+        </button>
       </div>
     </form>
   </div>

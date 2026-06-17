@@ -1,55 +1,43 @@
 <div class="vital-nexus-container layout-grid">
+  
   <section class="map-section">
     <header class="section-header">
       <h2>Geolocalización Sanitaria</h2>
-      <p>Centros de salud, farmacias y zonas de riesgo cercanas.</p>
+      <p>Monitoreo en tiempo real de focos epidemiológicos y disponibilidad hospitalaria.</p>
     </header>
     
-    <div class="map-container">
-      <img src="https://assets.website-files.com/5e832e12eb7ca02ee9064d42/5f7db426b676b95755fb2844_Group%20805.jpg" alt="Mapa de Infraestructura Médica" class="map-placeholder">
+    <div class="map-container-wrapper">
+      <div id="vitalMap" class="real-map" *ngIf="isBrowser"></div>
       
-      <div class="map-overlay">
-        <span class="badge badge-live">● Monitoreo en Tiempo Real (Nodo Centro)</span>
-      </div>
-    </div>
-
-    <div class="hospitals-list">
-      <h3>Establecimientos Cercanos</h3>
-      <div class="hospital-card" *ngFor="let hosp of hospitalesCercanos">
-        <div class="h-info">
-          <strong>{{ hosp.nombre }}</strong>
-          <span class="h-type">{{ hosp.tipo }}</span>
-        </div>
-        <div class="h-meta">
-          <span class="h-dist"><i class="icon-pin"></i> {{ hosp.distancia }}</span>
-          <span class="h-disp" [class.alta]="hosp.disponibilidad === 'Alta'">Disp: {{ hosp.disponibilidad }}</span>
-        </div>
+      <div *ngIf="!isBrowser" style="display: flex; justify-content: center; align-items: center; height: 450px; background: #f8f9fa;">
+        <p>Cargando motor geoespacial...</p>
       </div>
     </div>
   </section>
 
   <section class="alerts-section">
     <header class="section-header">
-      <h2>Alertas Epidemiológicas</h2>
-      <p>Notificaciones basadas en análisis distribuido.</p>
+      <h2>Alertas Activas (Aguascalientes)</h2>
     </header>
-
+    
     <div class="alert-cards-container">
-      <div class="epidemic-card" *ngFor="let alerta of alertasActivas" [ngClass]="{'high-risk': alerta.nivel === 'Alto'}">
+      
+      <div class="epidemic-card" *ngFor="let alerta of alertasActivas" [style.border-left-color]="alerta.color">
+        
         <div class="e-card-header">
-          <span class="e-type">{{ alerta.tipo }}</span>
-          <span class="e-date">{{ alerta.fecha }}</span>
+          <span [style.color]="alerta.color">Riesgo Epidemiológico: {{ alerta.nivel }}</span>
         </div>
-        <h3 class="e-disease">{{ alerta.enfermedad }}</h3>
-        <p class="e-zone"><i class="icon-map"></i> <strong>Zona Afectada:</strong> {{ alerta.zona }}</p>
-        <div class="e-recommendation">
-          <strong>Acción Sugerida:</strong> {{ alerta.recomendacion }}
-        </div>
+        
+        <h3 class="e-disease" [style.color]="alerta.color">{{ alerta.enfermedad }}</h3>
+        <p class="e-zone"><strong>Foco detectado:</strong> {{ alerta.zona }}</p>
+        
+        <p class="e-recommendation">Se recomienda a las unidades de salud en esta zona mantener monitoreo constante de pacientes con síntomas relacionados.</p>
       </div>
 
-      <div class="no-alerts" *ngIf="alertasActivas.length === 0">
-        <p>No hay alertas epidemiológicas activas en tu zona en este momento.</p>
+      <div *ngIf="alertasActivas.length === 0" style="text-align: center; padding: 20px; color: #38a169; background: #e6fffa; border-radius: 6px;">
+        <p>No se reportan alertas sanitarias en la región.</p>
       </div>
+      
     </div>
   </section>
 </div>

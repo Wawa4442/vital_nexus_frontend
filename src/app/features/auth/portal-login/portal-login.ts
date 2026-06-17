@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ApiService } from '../../../core/api.service'; // Ajusta la ruta a tu servicio
 
 @Component({
   selector: 'app-portal-login',
@@ -12,27 +13,51 @@ import { Router } from '@angular/router';
 })
 export class PortalLogin {
   rolActivo: 'paciente' | 'medico' = 'paciente';
-  
-  credenciales = {
-    identificador: '', // CURP para paciente, ID para médico
-    password: ''
-  };
+  nss: string = '';
+  cargando = false;
+  errorMensaje = ''; // Añadimos manejo de errores
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private api: ApiService) {}
 
   setRol(rol: 'paciente' | 'medico') {
     this.rolActivo = rol;
-    this.credenciales.identificador = '';
-    this.credenciales.password = '';
+    this.errorMensaje = ''; // Limpiamos errores si cambia de rol
   }
 
-  autenticar() {
-    console.log(`Autenticando ${this.rolActivo}...`);
-    // Simulación de ruteo post-login
-    if (this.rolActivo === 'paciente') {
-      this.router.navigate(['/paciente/historial']);
-    } else {
-      this.router.navigate(['/medico/consultas']);
-    }
+  consultarExpediente() {
+    const nssLimpio = this.nss.trim();
+    if (!nssLimpio) return;
+    
+    this.cargando = true;
+    this.errorMensaje = '';
+
+    // Consultamos al backend si el NSS existe
+    this.api.getPacienteByNss(nssLimpio).subscribe({
+      next: (res: any) => {
+        this.cargando = false;
+        
+        // Si el backend confirma que el paciente existe
+        if (res.success && res.data) {
+          // Guardamos el NSS y el ID real (UUID) para hacer las peticiones posteriores
+          localStorage.setItem('paciente_nss', nssLimpio);
+          localStorage.setItem('paciente_id', res.data.id_paciente); 
+          
+          // Redirigimos según el rol
+          if (this.rolActivo === 'paciente') {
+            this.router.navigate(['/paciente/historial']);
+          } else {
+            this.router.navigate(['/medico/consultas']);
+          }
+        } else {
+          // Si responde éxito pero data viene vacío o false
+          this.errorMensaje = 'No se encontró ningún expediente con este NSS.';
+        }
+      },
+      error: (err: any) => {
+        this.cargando = false;
+        // Si el backend devuelve un 404 u otro error
+        this.errorMensaje = err.error?.message || 'Error al conectar con la base de datos distribuida.';
+      }
+    });
   }
 }

@@ -6,7 +6,12 @@
 
   <section class="topology-section">
     <h3>Estado de Nodos Físicos</h3>
-    <div class="nodes-grid">
+    
+    <div *ngIf="cargando" class="loading-state">
+      <p>Estableciendo conexión con los nodos de la red...</p>
+    </div>
+
+    <div class="nodes-grid" *ngIf="!cargando && nodos.length > 0">
       <div class="node-card" *ngFor="let nodo of nodos" [ngClass]="{'warning': nodo.estado === 'Warning', 'offline': nodo.estado === 'Offline'}">
         <div class="node-header">
           <div class="status-indicator">
@@ -39,6 +44,10 @@
           <button class="btn btn-sm btn-outline" (click)="forzarSincronizacion(nodo.id)">Forzar Sync</button>
         </div>
       </div>
+    </div>
+
+    <div *ngIf="!cargando && nodos.length === 0" class="empty-state">
+      <p>No se encontraron nodos registrados en la base de datos.</p>
     </div>
   </section>
 

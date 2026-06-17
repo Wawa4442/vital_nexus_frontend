@@ -1,5 +1,4 @@
 <div class="admin-layout">
-  <!-- Sidebar de Navegación DBA -->
   <aside class="sidebar">
     <div class="sidebar-header">
       <img src="/logo.png" alt="Logo" class="sidebar-logo">
@@ -20,34 +19,38 @@
     </div>
   </aside>
 
-  <!-- Contenido Principal -->
   <main class="main-content">
     <header class="content-header">
       <h2>{{ vistaActual | uppercase }}</h2>
       <div class="admin-badge">AdminNorte_01 (Superusuario)</div>
     </header>
 
-    <!-- VISTA 1: CRUD Genérico (Ejemplo) -->
     <section class="crud-section" *ngIf="vistaActual !== 'reportes'">
       <div class="toolbar">
         <button class="btn btn-success">+ Nuevo Registro</button>
         <input type="text" placeholder="Buscar registro..." class="search-input">
       </div>
-      <div class="table-container">
+      
+      <div *ngIf="cargando" class="loading-state">
+        <p>Cargando datos de la base de datos distribuida...</p>
+      </div>
+
+      <div class="table-container" *ngIf="!cargando">
         <table class="data-table">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Nombre / Descripción</th>
-              <th>Región / Ubicación</th>
+              <th *ngFor="let col of columnasCrud">{{ col.label }}</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Datos de prueba del catálogo seleccionado</td>
-              <td>Nodo Norte</td>
+            <tr *ngIf="datosCrud.length === 0">
+              <td [attr.colspan]="columnasCrud.length + 1" style="text-align: center;">
+                No se encontraron registros en este catálogo.
+              </td>
+            </tr>
+            <tr *ngFor="let fila of datosCrud">
+              <td *ngFor="let col of columnasCrud">{{ fila[col.key] }}</td>
               <td>
                 <button class="btn-icon edit">Editar</button>
                 <button class="btn-icon delete">Eliminar</button>
@@ -58,7 +61,6 @@
       </div>
     </section>
 
-    <!-- VISTA 2: El Motor de Reportes y Joins (Filtros Avanzados) -->
     <section class="reports-section" *ngIf="vistaActual === 'reportes'">
       <div class="filter-panel">
         <h3>Motor de Consultas Multitabla (Vistas Globales)</h3>
@@ -83,7 +85,6 @@
         </form>
       </div>
 
-      <!-- Resultados del JOIN -->
       <div class="results-panel" *ngIf="resultadosReporte.length > 0">
         <h3>Resultados del Análisis</h3>
         <div class="table-container">

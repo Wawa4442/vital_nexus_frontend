@@ -1,61 +1,81 @@
 import { Routes } from '@angular/router';
 
+// TODO a futuro: Aquí importarás tus validadores de seguridad
+// import { adminGuard } from './core/guards/admin.guard';
+// import { pacienteGuard } from './core/guards/paciente.guard';
+
 export const routes: Routes = [
-  // Ruta inicial (Landing Page)
-  {
-    path: '',
-    loadComponent: () => import('./features/inicio/inicio').then(m => m.Inicio)
+  // --- INICIO ---
+  { 
+    path: '', 
+    loadComponent: () => import('./features/inicio/inicio').then(m => m.Inicio),
+    title: 'Vital Nexus | SNHCU'
   },
-  // Portal Paciente
-  {
-    path: 'paciente/historial',
-    loadComponent: () => import('./features/paciente/historial/historial').then(m => m.Historial)
+  
+  // --- AUTENTICACIÓN ---
+  { 
+    path: 'auth/portal', 
+    loadComponent: () => import('./features/auth/portal-login/portal-login').then(m => m.PortalLogin),
+    title: 'Portal de Acceso | Vital Nexus'
   },
-  // Portal Médico
-  {
-    path: 'medico/consultas',
-    loadComponent: () => import('./features/medico/consultas/consultas').then(m => m.Consultas)
+  { 
+    path: 'auth/login', 
+    loadComponent: () => import('./features/auth/login').then(m => m.Login),
+    title: 'Acceso DBA | Vital Nexus'
   },
-  // --- NUEVAS RUTAS ---
-  // Login Administrativo
-  {
-    path: 'auth/login',
-    loadComponent: () => import('./features/auth/login').then(m => m.Login)
+
+  // --- PORTAL PACIENTE ---
+  { 
+    path: 'paciente/historial', 
+    loadComponent: () => import('./features/paciente/historial/historial').then(m => m.Historial),
+    title: 'Mi Expediente | Paciente',
+    // canActivate: [pacienteGuard] // <-- Aquí bloquearás la ruta en el futuro
   },
-  // Dashboard DBA
-  {
-    path: 'admin/dashboard',
-    loadComponent: () => import('./features/admin/dashboard').then(m => m.Dashboard)
+  { 
+    path: 'paciente/perfil', 
+    loadComponent: () => import('./features/paciente/perfil/perfil').then(m => m.Perfil),
+    title: 'Perfil de Supervivencia'
   },
-  // Nuevas rutas del Portal Paciente
-  {
-    path: 'paciente/perfil',
-    loadComponent: () => import('./features/paciente/perfil/perfil').then(m => m.Perfil)
+  { 
+    path: 'paciente/alertas', 
+    loadComponent: () => import('./features/paciente/alertas/alertas').then(m => m.Alertas),
+    title: 'Geolocalización Sanitaria'
   },
-  {
-    path: 'paciente/alertas',
-    loadComponent: () => import('./features/paciente/alertas/alertas').then(m => m.Alertas)
+
+  // --- PORTAL MÉDICO ---
+  { 
+    path: 'medico/consultas', 
+    loadComponent: () => import('./features/medico/consultas/consultas').then(m => m.Consultas),
+    title: 'Registro de Consultas | Médico'
   },
-  // Nuevas rutas del Portal Médico
-  {
-    path: 'medico/receta',
-    loadComponent: () => import('./features/medico/receta/receta').then(m => m.Receta)
+  { 
+    path: 'medico/receta', 
+    loadComponent: () => import('./features/medico/receta/receta').then(m => m.Receta),
+    title: 'Recetario Electrónico'
   },
-  {
-    path: 'medico/tendencias',
-    loadComponent: () => import('./features/medico/tendencias/tendencias').then(m => m.Tendencias)
+  { 
+    path: 'medico/tendencias', 
+    loadComponent: () => import('./features/medico/tendencias/tendencias').then(m => m.Tendencias),
+    title: 'Tendencias Clínicas'
   },
-  {
-    path: 'auth/portal',
-    loadComponent: () => import('./features/auth/portal-login/portal-login').then(m => m.PortalLogin)
+
+  // --- INFRAESTRUCTURA (DBA) ---
+  { 
+    path: 'admin/dashboard', 
+    loadComponent: () => import('./features/admin/dashboard').then(m => m.Dashboard),
+    title: 'Dashboard DBA | Vital Nexus',
+    // canActivate: [adminGuard]
   },
-  {
-    path: 'admin/nodos',
-    loadComponent: () => import('./features/admin/nodos/nodos').then(m => m.Nodos)
+  { 
+    path: 'admin/nodos', 
+    loadComponent: () => import('./features/admin/nodos/nodos').then(m => m.Nodos),
+    title: 'Topología de Nodos'
   },
-  // Redirección por defecto
-  {
-    path: '**',
-    redirectTo: ''
+
+  // --- RUTAS COMODÍN ---
+  // Si el usuario escribe una URL que no existe, lo regresamos al inicio
+  { 
+    path: '**', 
+    redirectTo: '' 
   }
 ];

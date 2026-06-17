@@ -1,55 +1,56 @@
 <div class="vital-nexus-container">
   <header class="module-header">
     <h1>Emisión de Receta Electrónica</h1>
-    <p>Prescripción de fármacos vinculada al catálogo maestro nacional.</p>
+    <p>Asignada al Expediente ID: <strong>{{ expedienteActivo || 'Ninguno' }}</strong></p>
   </header>
 
-  <div class="prescription-layout">
-    <aside class="patient-context">
-      <h3>Contexto Clínico</h3>
-      <div class="context-card">
-        <div class="c-row">
-          <span class="c-label">Paciente:</span>
-          <span class="c-value">{{ pacienteActual.nombre }}</span>
-        </div>
-        <div class="c-row">
-          <span class="c-label">Diagnóstico Base:</span>
-          <span class="c-value highlight">{{ pacienteActual.diagnostico }}</span>
-        </div>
-        <div class="c-row">
-          <span class="c-label">ID Expediente:</span>
-          <span class="c-value uuid" title="{{ pacienteActual.idExpediente }}">{{ pacienteActual.idExpediente | slice:0:13 }}...</span>
-        </div>
+  <div class="alert alert-error" *ngIf="mensajeError" style="color: #dc3545; background-color: #f8d7da; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+    {{ mensajeError }}
+  </div>
+  <div class="alert alert-success" *ngIf="mensajeExito" style="color: #0f5132; background-color: #d1e7dd; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+    {{ mensajeExito }}
+  </div>
+
+  <div *ngIf="cargandoCatalogo" class="loading-state" style="text-align: center; padding: 2rem;">
+    <p>Sincronizando catálogo maestro de medicamentos...</p>
+  </div>
+
+  <main class="prescription-form-area" *ngIf="expedienteActivo && !cargandoCatalogo">
+    <form class="nexus-form" (ngSubmit)="generarPrescripcion()">
+      <div class="form-group">
+        <label>Seleccionar Fármaco (Catálogo V_MEDICAMENTO)</label>
+        <select [(ngModel)]="nuevaReceta.codigo_medicamento" name="medicamento" class="form-control" required [disabled]="guardando" style="width: 100%; padding: 8px;">
+          <option value="" disabled selected>-- Buscar en catálogo maestro --</option>
+          <option *ngFor="let med of catalogoMedicamentos" [value]="med.codigo_medicamento">
+            [{{ med.codigo_medicamento }}] - {{ med.nombre_generico }}
+          </option>
+        </select>
       </div>
-    </aside>
 
-    <main class="prescription-form-area">
-      <form class="nexus-form" (ngSubmit)="generarPrescripcion()">
-        <div class="form-group">
-          <label>Seleccionar Fármaco (Catálogo V_MEDICAMENTO)</label>
-          <select [(ngModel)]="nuevaReceta.codigo_medicamento" name="medicamento" class="form-control" required>
-            <option value="" disabled selected>-- Buscar por nombre genérico o código --</option>
-            <option *ngFor="let med of catalogoMedicamentos" [value]="med.codigo">
-              [{{ med.codigo }}] - {{ med.nombre }} <span *ngIf="med.requiereReceta">⚠️ (Controlado)</span>
-            </option>
-          </select>
-        </div>
+      <div class="form-group" style="margin-top: 15px;">
+        <label>Instrucciones de Dosificación</label>
+        <textarea 
+          [(ngModel)]="nuevaReceta.instrucciones" 
+          name="instrucciones" 
+          class="form-control" 
+          rows="4" 
+          required 
+          [disabled]="guardando" 
+          placeholder="Ej. Tomar 1 tableta cada 8 horas por 5 días..." 
+          style="width: 100%; padding: 10px; margin-top: 5px;"></textarea>
+      </div>
 
-        <div class="form-group">
-          <label>Instrucciones de Dosificación</label>
-          <textarea [(ngModel)]="nuevaReceta.instrucciones" name="instrucciones" class="form-control" rows="3" placeholder="Ej. Tomar 1 tableta cada 8 horas..." required></textarea>
-        </div>
+      <div class="form-actions" style="margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
+        <button type="button" class="btn btn-outline" (click)="volverConsultas()" [disabled]="guardando">Volver a Consulta</button>
+        <button type="submit" class="btn btn-success" [disabled]="guardando || !nuevaReceta.codigo_medicamento || !nuevaReceta.instrucciones">
+          {{ guardando ? 'Firmando y Transmitiendo...' : 'Firmar y Emitir Receta' }}
+        </button>
+      </div>
+    </form>
+  </main>
 
-        <div class="form-group">
-          <label>Duración del Tratamiento</label>
-          <input type="text" [(ngModel)]="nuevaReceta.duracion" name="duracion" class="form-control" placeholder="Ej. 7 días">
-        </div>
-
-        <div class="form-actions">
-          <button type="button" class="btn btn-outline">Cancelar</button>
-          <button type="submit" class="btn btn-success"><i class="icon-file-text"></i> Firmar y Emitir Receta</button>
-        </div>
-      </form>
-    </main>
+  <div class="alert-error" *ngIf="!expedienteActivo" style="color: #842029; background-color: #f8d7da; padding: 20px; border-radius: 5px; text-align: center; margin-top: 20px;">
+    <p><strong>Operación Restringida:</strong> Vaya a "Registro de Consultas" primero para crear un expediente y habilitar el recetario.</p>
+    <button class="btn btn-primary" (click)="volverConsultas()" style="margin-top: 15px; padding: 10px 20px;">Ir a Consultas</button>
   </div>
 </div>

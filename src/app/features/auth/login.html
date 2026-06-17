@@ -12,18 +12,20 @@
       <div class="form-group">
         <label>Nombre de Usuario</label>
         <div class="input-icon">
-          <input type="text" [(ngModel)]="credenciales.username" name="username" required placeholder="Ej. AdminNorte_01">
+          <input type="text" [(ngModel)]="credenciales.username" name="username" required placeholder="Ej. AdminNorte_01" [disabled]="cargando">
         </div>
       </div>
 
       <div class="form-group">
         <label>Contraseña</label>
         <div class="input-icon">
-          <input type="password" [(ngModel)]="credenciales.password" name="password" required placeholder="••••••••">
+          <input type="password" [(ngModel)]="credenciales.password" name="password" required placeholder="••••••••" [disabled]="cargando">
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary btn-block">Autenticar Administrador</button>
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="cargando || !credenciales.username || !credenciales.password">
+        {{ cargando ? 'Verificando credenciales...' : 'Autenticar Administrador' }}
+      </button>
       
       <div class="login-footer">
         <a href="#">¿Problemas de sincronización con tu Nodo? Contacta a soporte TI.</a>

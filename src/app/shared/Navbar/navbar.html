@@ -1,7 +1,6 @@
 <nav class="enterprise-navbar">
   <div class="nav-container">
     <div class="brand-section">
-      <!-- Ruta corregida apuntando a logo.png en la carpeta public -->
       <img src="/logo.png" alt="VITAL NEXUS Logo" class="brand-logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2966/2966327.png'">
       <div class="brand-text">
         <h1>VITAL<span>NEXUS</span></h1>
@@ -10,15 +9,14 @@
     </div>
 
     <ul class="nav-menu">
-      <li class="nav-item">
-        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
-      </li>
+      <li class="nav-item"><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Inicio</a></li>
       
       <li class="nav-item dropdown">
         <a href="javascript:void(0)" class="dropdown-toggle">Portal Paciente <i class="arrow down"></i></a>
         <ul class="dropdown-menu">
           <li><a routerLink="/paciente/historial">Expediente Unificado</a></li>
-          <li><a routerLink="/paciente/alertas">Alertas Epidemiológicas</a></li>
+          <li><a routerLink="/paciente/alertas">Geolocalización y Alertas</a></li>
+          <li><a routerLink="/paciente/perfil">Datos de Supervivencia</a></li>
         </ul>
       </li>
 
@@ -26,23 +24,27 @@
         <a href="javascript:void(0)" class="dropdown-toggle">Portal Médico <i class="arrow down"></i></a>
         <ul class="dropdown-menu">
           <li><a routerLink="/medico/consultas">Registro de Consultas</a></li>
-          <li><a routerLink="/medico/emergencia">Consulta de Supervivencia</a></li>
-          <li><a routerLink="/medico/reportes">Tendencias Clínicas</a></li>
+          <li><a routerLink="/medico/receta">Recetario Electrónico</a></li>
+          <li><a routerLink="/medico/tendencias">Tendencias Clínicas</a></li>
         </ul>
       </li>
 
       <li class="nav-item dropdown">
         <a href="javascript:void(0)" class="dropdown-toggle">Infraestructura <i class="arrow down"></i></a>
         <ul class="dropdown-menu">
-          <li><a routerLink="/admin/nodos">Gestión de Replicación</a></li>
-          <li><a routerLink="/admin/fragmentacion">Control de Fragmentación</a></li>
+          <li><a routerLink="/admin/dashboard">Panel DBA</a></li>
+          <li><a routerLink="/admin/nodos">Gestión de Nodos</a></li>
         </ul>
       </li>
     </ul>
 
     <div class="nav-actions">
-      <button class="btn-login" routerLink="/auth/login">
-        <i class="icon-user"></i> Acceso Seguro
+      <button *ngIf="!tieneSesionActiva" class="btn-login" routerLink="/auth/portal">
+        <i class="icon-user"></i> Portal de Acceso (NSS)
+      </button>
+
+      <button *ngIf="tieneSesionActiva" class="btn-logout" (click)="cerrarExpediente()" style="background-color: #dc3545; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background-color 0.2s;">
+        <i class="icon-logout"></i> Cerrar Expediente Activo
       </button>
     </div>
   </div>

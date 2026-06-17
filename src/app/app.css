@@ -1,4 +1,1 @@
-.main-content {
-  min-height: calc(100vh - 70px); /* Restamos la altura del navbar */
-  background-color: #f4f7f6;
-}
+.main-content { min-height: calc(100vh - 80px); background-color: #f7fafc; }

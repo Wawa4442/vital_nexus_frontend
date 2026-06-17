@@ -1,59 +1,58 @@
 <div class="vital-nexus-container">
-  <header class="patient-header">
+  
+  <div class="alert alert-error" *ngIf="error" style="color: #dc3545; background-color: #f8d7da; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+    {{ error }}
+  </div>
+  
+  <div *ngIf="cargando" class="loading-state" style="text-align: center; padding: 3rem;">
+    <p>Localizando expediente maestro en la red...</p>
+  </div>
+
+  <header class="patient-header" *ngIf="!cargando && pacienteInfo" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 25px; border-left: 5px solid #0d6efd;">
     <div class="patient-info">
-      <h1>Expediente Clínico Unificado</h1>
-      <h2 class="patient-name">{{ pacienteInfo.nombre }}</h2>
-      <div class="patient-meta">
-        <span class="badge">CURP/SSN: {{ pacienteInfo.curp }}</span>
-        <span><strong>Fecha Nac:</strong> {{ pacienteInfo.fechaNac }}</span>
+      <h1 style="font-size: 1.2rem; color: #6c757d; margin-top: 0;">Expediente Clínico Unificado</h1>
+      <h2 class="patient-name" style="color: #212529; margin-bottom: 15px;">{{ pacienteInfo.nombre }} {{ pacienteInfo.apellido }}</h2>
+      
+      <div class="patient-meta" style="display: flex; gap: 15px; flex-wrap: wrap; font-size: 0.95rem;">
+        <span class="badge" style="background: #0d6efd; color: white; padding: 4px 10px; border-radius: 4px;">NSS: {{ pacienteInfo.curp_ssn }}</span>
+        <span><strong>Fecha Nac:</strong> {{ pacienteInfo.fecha_nac | date:'dd/MM/yyyy' }}</span>
         <span><strong>Género:</strong> {{ pacienteInfo.genero }}</span>
-        <span><strong>Origen:</strong> {{ pacienteInfo.nodo }}</span>
+        <span><strong>Ciudad Base:</strong> {{ pacienteInfo.ciudad_residencia }}</span>
       </div>
-    </div>
-    <div class="actions">
-      <button class="btn btn-primary">Descargar Resumen (PDF)</button>
     </div>
   </header>
 
-  <section class="survival-data-card">
-    <h3>Datos de Supervivencia (Alta Disponibilidad)</h3>
-    <div class="grid-3">
-      <div class="data-item">
-        <span class="label">Tipo de Sangre</span>
-        <span class="value">O+</span>
-      </div>
-      <div class="data-item">
-        <span class="label">Alergias</span>
-        <span class="value critical">Penicilina</span>
-      </div>
+  <section class="encounters-section" *ngIf="!cargando && pacienteInfo">
+    <h3 style="color: #212529; border-bottom: 2px solid #dee2e6; padding-bottom: 10px; margin-bottom: 20px;">Registro de Consultas</h3>
+    
+    <div *ngIf="cargandoHistorial" style="text-align: center; padding: 2rem; color: #6c757d;">
+      <p>Descargando historial clínico de los nodos...</p>
     </div>
-  </section>
 
-  <section class="encounters-section">
-    <h3>Registro de Consultas</h3>
-    <div class="table-responsive">
-      <table class="nexus-table">
+    <div class="table-responsive" *ngIf="!cargandoHistorial && expedientes.length > 0">
+      <table class="nexus-table" style="width: 100%; border-collapse: collapse;">
         <thead>
-          <tr>
-            <th>ID Expediente</th>
-            <th>Fecha de Atención</th>
-            <th>Establecimiento</th>
-            <th>Médico Tratante</th>
-            <th>Motivo de Consulta</th>
-            <th>Acciones</th>
+          <tr style="background-color: #f1f3f5; text-align: left;">
+            <th style="padding: 12px; border-bottom: 2px solid #dee2e6;">ID Expediente</th>
+            <th style="padding: 12px; border-bottom: 2px solid #dee2e6;">Fecha</th>
+            <th style="padding: 12px; border-bottom: 2px solid #dee2e6;">Establecimiento (ID)</th>
+            <th style="padding: 12px; border-bottom: 2px solid #dee2e6;">Motivo de Consulta</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let exp of expedientes">
-            <td class="uuid" title="{{ exp.id }}">{{ exp.id | slice:0:13 }}...</td>
-            <td>{{ exp.fecha }}</td>
-            <td>{{ exp.establecimiento }}</td>
-            <td>{{ exp.medico }}</td>
-            <td><span class="tag tag-warning">{{ exp.motivo }}</span></td>
-            <td><button class="btn btn-sm">Ver Receta</button></td>
+          <tr *ngFor="let exp of expedientes" style="border-bottom: 1px solid #dee2e6;">
+            <td class="uuid" style="padding: 12px; font-family: monospace; color: #6c757d;">{{ exp.id_expediente | slice:0:8 }}...</td>
+            <td style="padding: 12px;">{{ exp.fecha_atencion | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td class="uuid" style="padding: 12px; font-family: monospace; color: #6c757d;">{{ exp.id_establecimiento | slice:0:8 }}...</td>
+            <td style="padding: 12px;"><span class="tag tag-warning" style="background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 4px; font-size: 0.9em;">{{ exp.motivo_consulta }}</span></td>
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <div *ngIf="!cargandoHistorial && expedientes.length === 0" style="text-align: center; padding: 40px 20px; background: #f8f9fa; border-radius: 8px; border: 1px dashed #ced4da;">
+      <p style="color: #495057; font-size: 1.1rem; margin-bottom: 5px;">No hay historial clínico disponible.</p>
+      <p style="color: #6c757d; font-size: 0.9rem; margin: 0;">Aún no se han registrado consultas médicas para este paciente.</p>
     </div>
   </section>
 </div>

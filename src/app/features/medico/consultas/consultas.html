@@ -1,39 +1,43 @@
 <div class="vital-nexus-container">
-  <header class="module-header">
-    <h1>Gestión de Consultas Clínicas</h1>
-    <p>Búsqueda global y registro de diagnóstico</p>
-  </header>
+  
+  <div *ngIf="cargando" class="loading-state" style="text-align: center; padding: 2rem;">
+    <p>Recuperando historial del paciente...</p>
+  </div>
 
-  <!-- Buscador Global -->
-  <section class="search-section">
-    <div class="search-box">
-      <input type="text" [(ngModel)]="busquedaCurp" placeholder="Ingrese CURP/SSN del paciente para búsqueda transparente...">
-      <button class="btn btn-primary" (click)="buscarPaciente()">Buscar en Red</button>
-    </div>
-  </section>
-
-  <!-- Área de Registro (Solo visible si hay paciente) -->
-  <section class="registration-section" *ngIf="pacienteEncontrado">
-    <div class="patient-alert">
-      <strong>Paciente Activo:</strong> {{ pacienteEncontrado.nombre }} | 
-      <strong class="text-danger">Alergias:</strong> {{ pacienteEncontrado.alergias }}
+  <div class="alert alert-error" *ngIf="error" style="color: #dc3545; background-color: #f8d7da; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+    {{ error }}
+  </div>
+  
+  <section class="registration-section" *ngIf="!cargando && pacienteEncontrado">
+    <div class="patient-alert" style="background-color: #e2e8f0; padding: 15px; border-left: 4px solid #0d6efd; border-radius: 4px; margin-bottom: 20px;">
+      <strong>Expediente Activo:</strong> {{ pacienteEncontrado.nombre }} {{ pacienteEncontrado.apellido }}
+      <br>
+      <small style="color: #6c757d;">NSS: {{ pacienteEncontrado.curp_ssn }} | Género: {{ pacienteEncontrado.genero }}</small>
     </div>
 
     <form class="consultation-form" (ngSubmit)="guardarConsulta()">
-      <h3>Registrar Nueva Atención Médica</h3>
+      <h3>Registrar Nueva Atención Clínica</h3>
       
-      <div class="form-group">
-        <label>Motivo de Consulta</label>
-        <input type="text" [(ngModel)]="nuevaConsulta.motivo_consulta" name="motivo" required placeholder="Ej. Dolor abdominal">
+      <div class="form-group" style="margin-top: 15px;">
+        <label>Motivo de Consulta y Diagnóstico</label>
+        <textarea 
+          [(ngModel)]="nuevaConsulta.motivo_consulta" 
+          name="motivo" 
+          rows="5" 
+          required 
+          class="form-control" 
+          placeholder="Describa los síntomas y el diagnóstico de la evaluación médica..."
+          style="width: 100%; padding: 10px; margin-top: 5px;"
+          [disabled]="guardando"></textarea>
       </div>
-
-      <div class="form-group">
-        <label>Diagnóstico y Síntomas</label>
-        <textarea [(ngModel)]="nuevaConsulta.sintomas" name="sintomas" rows="4" required></textarea>
-      </div>
-
-      <div class="form-actions">
-        <button type="submit" class="btn btn-success">Guardar y Sincronizar Nodo</button>
+      
+      <div class="form-actions" style="margin-top: 20px; text-align: right;">
+        <button 
+          type="submit" 
+          class="btn btn-success" 
+          [disabled]="guardando || !nuevaConsulta.motivo_consulta">
+          {{ guardando ? 'Sincronizando al Nodo...' : 'Guardar y Emitir Receta' }}
+        </button>
       </div>
     </form>
   </section>

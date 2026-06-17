@@ -1,27 +1,58 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { ApiService } from '../../../core/api.service';
 
 @Component({
-  selector: 'app-medico-tendencias',
+  selector: 'app-tendencias',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './tendencias.html',
   styleUrls: ['./tendencias.css']
 })
-export class Tendencias {
-  pacienteSeleccionado = 'José Eduardo Gómez';
-  
-  // Datos simulados de signos vitales en el tiempo
+export class Tendencias implements OnInit {
+  pacienteInfo: any = null;
+  cargando = true;
+  errorMensaje = '';
+
+  // NOTA: Datos simulados para la UI. 
+  // A futuro, esto debería venir de un endpoint tipo GET /api/expedientes/vítales/:id
   historialPresion = [
-    { fecha: 'Ene', sistolica: 140, diastolica: 90, estado: 'Alta' },
-    { fecha: 'Feb', sistolica: 135, diastolica: 85, estado: 'Moderada' },
-    { fecha: 'Mar', sistolica: 128, diastolica: 82, estado: 'Normal' },
-    { fecha: 'Abr', sistolica: 120, diastolica: 80, estado: 'Óptima' },
-    { fecha: 'May', sistolica: 118, diastolica: 78, estado: 'Óptima' }
+    { fecha: 'Ene', sistolica: 140, diastolica: 90 },
+    { fecha: 'Feb', sistolica: 135, diastolica: 85 },
+    { fecha: 'Mar', sistolica: 128, diastolica: 82 },
+    { fecha: 'Abr', sistolica: 120, diastolica: 80 }
   ];
 
+  constructor(private api: ApiService, private router: Router) {}
+
+  ngOnInit() {
+    const nss = localStorage.getItem('paciente_nss');
+    if (!nss) { 
+      this.router.navigate(['/auth/portal']); 
+      return; 
+    }
+
+    this.api.getPacienteByNss(nss).subscribe({
+      next: (res: any) => {
+        if (res.success && res.data) {
+          this.pacienteInfo = res.data;
+        } else {
+          this.errorMensaje = 'No se encontró la información del paciente.';
+        }
+        this.cargando = false;
+      },
+      error: (err: any) => {
+        this.errorMensaje = 'Error al conectar con la base de datos distribuida.';
+        this.cargando = false;
+      }
+    });
+  }
+
   calcularAltura(valor: number): string {
-    // Escala simple para CSS (Max 160 = 100%)
-    return `${(valor / 160) * 100}%`;
+    // Calculamos el porcentaje, pero usamos Math.min para toparlo al 100% 
+    // y evitar que la barra se desborde visualmente si el valor supera los 160.
+    const porcentaje = (valor / 160) * 100;
+    return `${Math.min(porcentaje, 100)}%`;
   }
 }

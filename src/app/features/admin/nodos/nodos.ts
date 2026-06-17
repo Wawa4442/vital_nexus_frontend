@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ApiService } from '../../../core/api.service'; // Ajusta la ruta correcta
 
 @Component({
   selector: 'app-admin-nodos',
@@ -8,23 +9,53 @@ import { CommonModule } from '@angular/common';
   templateUrl: './nodos.html',
   styleUrls: ['./nodos.css']
 })
-export class Nodos {
-  // Topología basada en la infraestructura distribuida
-  nodos = [
-    { id: 1, region: 'Norte', ubicacion: 'Aguascalientes', ip: '192.168.1.10', tipo: 'Maestro', estado: 'Online', latencia: 12, sync: 100 },
-    { id: 2, region: 'Centro', ubicacion: 'Chicopee', ip: '192.168.1.20', tipo: 'Maestro', estado: 'Online', latencia: 18, sync: 99 },
-    { id: 3, region: 'Bajío', ubicacion: 'Guanajuato', ip: '192.168.1.30', tipo: 'Replica', estado: 'Warning', latencia: 145, sync: 82 }
-  ];
+export class Nodos implements OnInit {
+  nodos: any[] = [];
+  cargando = true;
 
-  // Reglas de Minitérminos y Predicados
+  // Reglas de Minitérminos (Se quedan estáticas porque son políticas de configuración)
   reglasFragmentacion = [
     { tabla: 'NODO', predicado: 'P1 = id_nodo = 1', fragmento: 'F1_Norte', nodoAsignado: 'Nodo 1' },
     { tabla: 'PACIENTE', predicado: "M1 = ciudad_residencia = 'Chicopee' AND genero = 'F'", fragmento: 'F1_Pacientes', nodoAsignado: 'Nodo 2' },
     { tabla: 'EXPEDIENTE', predicado: "M1 = motivo_consulta = 'Emergencia'", fragmento: 'F_Critico', nodoAsignado: 'Replicación Global (Todos)' }
   ];
 
+  constructor(private apiService: ApiService) {}
+
+  ngOnInit() {
+    this.cargarNodos();
+  }
+
+  cargarNodos() {
+    this.cargando = true;
+    this.apiService.getNodos().subscribe({
+      next: (res) => {
+        if (res.success && res.data) {
+          // Mapeamos los datos reales de la BD y les inyectamos métricas simuladas para la UI
+          this.nodos = res.data.map((nodoDb: any) => ({
+            id: nodoDb.id_nodo,
+            region: nodoDb.nombre_region,
+            ubicacion: nodoDb.ubicacion_geografica,
+            ip: nodoDb.ip_servidor,
+            // Métricas visuales (simuladas hasta que tengas un endpoint de telemetría)
+            tipo: nodoDb.id_nodo === 1 ? 'Maestro' : 'Replica',
+            estado: 'Online', 
+            latencia: Math.floor(Math.random() * 40) + 10, // Genera latencia entre 10ms y 50ms
+            sync: 100
+          }));
+        }
+        this.cargando = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar nodos', err);
+        this.cargando = false;
+      }
+    });
+  }
+
   forzarSincronizacion(idNodo: number) {
     console.log(`Forzando volcado de transacciones (Commit) hacia el Nodo ${idNodo}...`);
+    // Aquí a futuro podrías llamar a un endpoint: this.apiService.sincronizarNodo(idNodo)
     alert(`Señal de sincronización enviada al Nodo ${idNodo}. Reduciendo latencia de fragmentos...`);
   }
-} 
+}
