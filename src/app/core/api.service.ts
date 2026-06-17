@@ -134,4 +134,36 @@ export class ApiService {
   registrarNodo(datos: any): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(`${this.baseUrl}/nodos`, datos, this.httpOptions);
   }
+
+  updateNodo(id: string, datos: any): Observable<ApiResponse> {
+    return this.http.put<ApiResponse>(`${this.baseUrl}/nodos/${id}`, datos, this.httpOptions);
+  }
+
+  deleteNodo(id: string): Observable<ApiResponse> {
+    return this.http.delete<ApiResponse>(`${this.baseUrl}/nodos/${id}`, this.httpOptions);
+  }
+
+  updateEstablecimiento(id: string, datos: any): Observable<ApiResponse> {
+    return this.http.put<ApiResponse>(`${this.baseUrl}/establecimientos/${id}`, datos, this.httpOptions);
+  }
+
+  deleteEstablecimiento(id: string): Observable<ApiResponse> {
+    return this.http.delete<ApiResponse>(`${this.baseUrl}/establecimientos/${id}`, this.httpOptions);
+  }
+
+  updateMedico(id: string, datos: any): Observable<ApiResponse> {
+    return this.http.put<ApiResponse>(`${this.baseUrl}/medicos/${id}`, datos, this.httpOptions);
+  }
+
+  deleteMedico(id: string): Observable<ApiResponse> {
+    return this.http.delete<ApiResponse>(`${this.baseUrl}/medicos/${id}`, this.httpOptions);
+  }
+
+  updateMedicamento(id: string, datos: any): Observable<ApiResponse> {
+    return this.http.put<ApiResponse>(`${this.baseUrl}/medicamentos/${id}`, datos, this.httpOptions);
+  }
+
+  deleteMedicamento(id: string): Observable<ApiResponse> {
+    return this.http.delete<ApiResponse>(`${this.baseUrl}/medicamentos/${id}`, this.httpOptions);
+  }
 }

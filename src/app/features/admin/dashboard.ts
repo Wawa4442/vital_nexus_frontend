@@ -21,6 +21,11 @@ export class Dashboard implements OnInit {
   columnasCrud: { key: string, label: string }[] = [];
   cargando = false;
 
+  // Variables para el modal CRUD
+  mostrarModal = false;
+  modoModal: 'crear' | 'editar' = 'crear';
+  formModel: any = {};
+
   constructor(
     private router: Router,
     private apiService: ApiService,
@@ -131,5 +136,148 @@ export class Dashboard implements OnInit {
       next: () => this.router.navigate(['/']),
       error: () => this.router.navigate(['/']) // Redirigir incluso si el backend falla
     });
+  }
+
+  abrirModalCrear() {
+    this.modoModal = 'crear';
+    this.formModel = {};
+    
+    // Inicializar valores por defecto según la vista actual
+    if (this.vistaActual === 'medicamentos') {
+      this.formModel.requiere_receta = true;
+    }
+    
+    this.mostrarModal = true;
+    this.cdr.detectChanges();
+  }
+
+  abrirModalEditar(registro: any) {
+    this.modoModal = 'editar';
+    // Copiar objeto para no modificar directamente la tabla antes de guardar
+    this.formModel = { ...registro };
+    
+    // Mapear booleanos para checkbox si es necesario
+    if (this.vistaActual === 'medicamentos') {
+      this.formModel.requiere_receta = !!this.formModel.requiere_receta;
+    }
+    
+    this.mostrarModal = true;
+    this.cdr.detectChanges();
+  }
+
+  cerrarModal() {
+    this.mostrarModal = false;
+    this.formModel = {};
+    this.cdr.detectChanges();
+  }
+
+  guardarRegistro() {
+    if (this.modoModal === 'crear') {
+      this.crearRegistro();
+    } else {
+      this.actualizarRegistro();
+    }
+  }
+
+  crearRegistro() {
+    switch (this.vistaActual) {
+      case 'nodos':
+        this.apiService.registrarNodo(this.formModel).subscribe({
+          next: (res) => this.handleSuccess('Nodo creado exitosamente'),
+          error: (err) => this.handleError(err)
+        });
+        break;
+      case 'establecimientos':
+        this.apiService.registrarEstablecimiento(this.formModel).subscribe({
+          next: (res) => this.handleSuccess('Establecimiento creado exitosamente'),
+          error: (err) => this.handleError(err)
+        });
+        break;
+      case 'medicos':
+        this.apiService.registrarMedico(this.formModel).subscribe({
+          next: (res) => this.handleSuccess('Médico creado exitosamente'),
+          error: (err) => this.handleError(err)
+        });
+        break;
+      case 'medicamentos':
+        this.apiService.registrarMedicamento(this.formModel).subscribe({
+          next: (res) => this.handleSuccess('Medicamento creado exitosamente'),
+          error: (err) => this.handleError(err)
+        });
+        break;
+    }
+  }
+
+  actualizarRegistro() {
+    switch (this.vistaActual) {
+      case 'nodos':
+        this.apiService.updateNodo(this.formModel.id_nodo, this.formModel).subscribe({
+          next: (res) => this.handleSuccess('Nodo actualizado exitosamente'),
+          error: (err) => this.handleError(err)
+        });
+        break;
+      case 'establecimientos':
+        this.apiService.updateEstablecimiento(this.formModel.id_establecimiento, this.formModel).subscribe({
+          next: (res) => this.handleSuccess('Establecimiento actualizado exitosamente'),
+          error: (err) => this.handleError(err)
+        });
+        break;
+      case 'medicos':
+        this.apiService.updateMedico(this.formModel.id_medico, this.formModel).subscribe({
+          next: (res) => this.handleSuccess('Médico actualizado exitosamente'),
+          error: (err) => this.handleError(err)
+        });
+        break;
+      case 'medicamentos':
+        this.apiService.updateMedicamento(this.formModel.codigo_medicamento, this.formModel).subscribe({
+          next: (res) => this.handleSuccess('Medicamento actualizado exitosamente'),
+          error: (err) => this.handleError(err)
+        });
+        break;
+    }
+  }
+
+  eliminarRegistro(registro: any) {
+    if (!confirm('¿Estás seguro de que deseas eliminar este registro?')) {
+      return;
+    }
+    
+    switch (this.vistaActual) {
+      case 'nodos':
+        this.apiService.deleteNodo(registro.id_nodo).subscribe({
+          next: (res) => this.handleSuccess('Nodo eliminado exitosamente'),
+          error: (err) => this.handleError(err)
+        });
+        break;
+      case 'establecimientos':
+        this.apiService.deleteEstablecimiento(registro.id_establecimiento).subscribe({
+          next: (res) => this.handleSuccess('Establecimiento eliminado exitosamente'),
+          error: (err) => this.handleError(err)
+        });
+        break;
+      case 'medicos':
+        this.apiService.deleteMedico(registro.id_medico).subscribe({
+          next: (res) => this.handleSuccess('Médico eliminado exitosamente'),
+          error: (err) => this.handleError(err)
+        });
+        break;
+      case 'medicamentos':
+        this.apiService.deleteMedicamento(registro.codigo_medicamento).subscribe({
+          next: (res) => this.handleSuccess('Medicamento eliminado exitosamente'),
+          error: (err) => this.handleError(err)
+        });
+        break;
+    }
+  }
+
+  private handleSuccess(mensaje: string) {
+    alert(mensaje);
+    this.cerrarModal();
+    this.cargarDatosVista();
+  }
+
+  private handleError(err: any) {
+    console.error(err);
+    alert(err.error?.message || 'Ocurrió un error al procesar la solicitud');
   }
 }

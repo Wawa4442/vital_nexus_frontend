@@ -27,7 +27,7 @@
 
     <section class="crud-section" *ngIf="vistaActual !== 'reportes'">
       <div class="toolbar">
-        <button class="btn btn-success">+ Nuevo Registro</button>
+        <button class="btn btn-success" (click)="abrirModalCrear()">+ Nuevo Registro</button>
         <input type="text" placeholder="Buscar registro..." class="search-input">
       </div>
       
@@ -52,12 +52,129 @@
             <tr *ngFor="let fila of datosCrud">
               <td *ngFor="let col of columnasCrud">{{ fila[col.key] }}</td>
               <td>
-                <button class="btn-icon edit">Editar</button>
-                <button class="btn-icon delete">Eliminar</button>
+                <button class="btn-icon edit" (click)="abrirModalEditar(fila)">Editar</button>
+                <button class="btn-icon delete" (click)="eliminarRegistro(fila)">Eliminar</button>
               </td>
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Modal CRUD -->
+      <div class="modal-overlay" *ngIf="mostrarModal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>{{ modoModal === 'crear' ? 'Nuevo Registro' : 'Editar Registro' }}</h3>
+            <button class="close-btn" (click)="cerrarModal()">&times;</button>
+          </div>
+          
+          <form (ngSubmit)="guardarRegistro()">
+            <div class="modal-body">
+              
+              <!-- CAMPOS PARA NODOS -->
+              <ng-container *ngIf="vistaActual === 'nodos'">
+                <div class="form-group">
+                  <label>ID Nodo</label>
+                  <input type="number" [(ngModel)]="formModel.id_nodo" name="id_nodo" required [disabled]="modoModal === 'editar'" placeholder="Ej. 1">
+                </div>
+                <div class="form-group">
+                  <label>Nombre de Región</label>
+                  <input type="text" [(ngModel)]="formModel.nombre_region" name="nombre_region" required placeholder="Ej. Norte">
+                </div>
+                <div class="form-group">
+                  <label>IP del Servidor</label>
+                  <input type="text" [(ngModel)]="formModel.ip_servidor" name="ip_servidor" required placeholder="Ej. 192.168.1.5">
+                </div>
+                <div class="form-group">
+                  <label>Ubicación Geográfica</label>
+                  <input type="text" [(ngModel)]="formModel.ubicacion_geografica" name="ubicacion_geografica" required placeholder="Ej. Chihuahua">
+                </div>
+              </ng-container>
+
+              <!-- CAMPOS PARA ESTABLECIMIENTOS -->
+              <ng-container *ngIf="vistaActual === 'establecimientos'">
+                <div class="form-group">
+                  <label>ID Establecimiento</label>
+                  <input type="number" [(ngModel)]="formModel.id_establecimiento" name="id_establecimiento" required [disabled]="modoModal === 'editar'" placeholder="Ej. 101">
+                </div>
+                <div class="form-group">
+                  <label>Nombre del Hospital</label>
+                  <input type="text" [(ngModel)]="formModel.nombre" name="nombre" required placeholder="Ej. Hospital General">
+                </div>
+                <div class="form-group">
+                  <label>Dirección</label>
+                  <input type="text" [(ngModel)]="formModel.direccion" name="direccion" required placeholder="Ej. Av. de la Salud 123">
+                </div>
+                <div class="form-group">
+                  <label>Ciudad</label>
+                  <input type="text" [(ngModel)]="formModel.ciudad" name="ciudad" required placeholder="Ej. Chihuahua">
+                </div>
+                <div class="form-group">
+                  <label>Código Postal</label>
+                  <input type="text" [(ngModel)]="formModel.codigo_postal" name="codigo_postal" required placeholder="Ej. 31000">
+                </div>
+                <div class="form-group">
+                  <label>ID Nodo Asignado</label>
+                  <input type="number" [(ngModel)]="formModel.id_nodo_asig" name="id_nodo_asig" required placeholder="Ej. 1">
+                </div>
+              </ng-container>
+
+              <!-- CAMPOS PARA MEDICOS -->
+              <ng-container *ngIf="vistaActual === 'medicos'">
+                <div class="form-group">
+                  <label>ID Médico</label>
+                  <input type="number" [(ngModel)]="formModel.id_medico" name="id_medico" required [disabled]="modoModal === 'editar'" placeholder="Ej. 501">
+                </div>
+                <div class="form-group">
+                  <label>ID Establecimiento</label>
+                  <input type="number" [(ngModel)]="formModel.id_establecimiento" name="id_establecimiento" required placeholder="Ej. 101">
+                </div>
+                <div class="form-group">
+                  <label>Nombre Completo</label>
+                  <input type="text" [(ngModel)]="formModel.nombre_completo" name="nombre_completo" required placeholder="Ej. Dr. Juan Pérez">
+                </div>
+                <div class="form-group">
+                  <label>Especialidad</label>
+                  <input type="text" [(ngModel)]="formModel.especialidad" name="especialidad" required placeholder="Ej. Cardiología">
+                </div>
+                <div class="form-group">
+                  <label>Género</label>
+                  <select [(ngModel)]="formModel.genero" name="genero" required>
+                    <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="M">Masculino (M)</option>
+                    <option value="F">Femenino (F)</option>
+                    <option value="Otro">Otro</option>
+                  </select>
+                </div>
+              </ng-container>
+
+              <!-- CAMPOS PARA MEDICAMENTOS -->
+              <ng-container *ngIf="vistaActual === 'medicamentos'">
+                <div class="form-group">
+                  <label>Código Medicamento</label>
+                  <input type="number" [(ngModel)]="formModel.codigo_medicamento" name="codigo_medicamento" required [disabled]="modoModal === 'editar'" placeholder="Ej. 104922">
+                </div>
+                <div class="form-group">
+                  <label>Nombre Genérico (Fármaco)</label>
+                  <input type="text" [(ngModel)]="formModel.nombre_generico" name="nombre_generico" required placeholder="Ej. Paracetamol 500mg">
+                </div>
+                <div class="form-group">
+                  <label>Costo Base ($)</label>
+                  <input type="number" step="0.01" [(ngModel)]="formModel.costo_base" name="costo_base" required placeholder="Ej. 99.90">
+                </div>
+                <div class="form-group check-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem;">
+                  <input type="checkbox" [(ngModel)]="formModel.requiere_receta" name="requiere_receta" id="req_receta" style="width: auto;">
+                  <label for="req_receta" style="margin: 0; cursor: pointer;">Requiere Receta Médica</label>
+                </div>
+              </ng-container>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+          </form>
+        </div>
       </div>
     </section>
 
