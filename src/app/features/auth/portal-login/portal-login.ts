@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -17,7 +17,11 @@ export class PortalLogin {
   cargando = false;
   errorMensaje = ''; // Añadimos manejo de errores
 
-  constructor(private router: Router, private api: ApiService) {}
+  constructor(
+    private router: Router, 
+    private api: ApiService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   setRol(rol: 'paciente' | 'medico') {
     this.rolActivo = rol;
@@ -52,11 +56,13 @@ export class PortalLogin {
           // Si responde éxito pero data viene vacío o false
           this.errorMensaje = 'No se encontró ningún expediente con este NSS.';
         }
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         this.cargando = false;
         // Si el backend devuelve un 404 u otro error
         this.errorMensaje = err.error?.message || 'Error al conectar con la base de datos distribuida.';
+        this.cdr.detectChanges();
       }
     });
   }

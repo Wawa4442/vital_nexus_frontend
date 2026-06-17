@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -16,7 +16,11 @@ export class Login {
   errorMensaje = '';
   cargando = false;
 
-  constructor(private router: Router, private api: ApiService) {}
+  constructor(
+    private router: Router, 
+    private api: ApiService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   iniciarSesion() {
     // 1. Validación básica para no saturar al backend con peticiones vacías
@@ -37,11 +41,13 @@ export class Login {
           this.cargando = false;
           this.errorMensaje = respuesta.message || 'Credenciales incorrectas.';
         }
+        this.cdr.detectChanges();
       },
       error: (err: any) => { 
         this.cargando = false;
         // 3. Captura el mensaje exacto que configuraste en tu index.js / backend
         this.errorMensaje = err.error?.message || 'Error de conexión con el servidor maestro.';
+        this.cdr.detectChanges();
       }
     });
   }

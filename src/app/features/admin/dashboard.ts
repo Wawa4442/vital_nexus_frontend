@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -23,11 +23,26 @@ export class Dashboard implements OnInit {
 
   constructor(
     private router: Router,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    this.cargarDatosVista();
+    if (typeof window === 'undefined') {
+      return;
+    }
+    this.apiService.getAdminProfile().subscribe({
+      next: (res) => {
+        if (res.success) {
+          this.cargarDatosVista();
+        } else {
+          this.router.navigate(['/auth/login']);
+        }
+      },
+      error: () => {
+        this.router.navigate(['/auth/login']);
+      }
+    });
   }
 
   cambiarVista(vista: string) {
@@ -51,6 +66,7 @@ export class Dashboard implements OnInit {
         this.apiService.getNodos().subscribe(res => {
           if (res.success) this.datosCrud = res.data;
           this.cargando = false;
+          this.cdr.detectChanges();
         });
         break;
 
@@ -63,6 +79,7 @@ export class Dashboard implements OnInit {
         this.apiService.getEstablecimientos().subscribe(res => {
           if (res.success) this.datosCrud = res.data;
           this.cargando = false;
+          this.cdr.detectChanges();
         });
         break;
 
@@ -74,6 +91,7 @@ export class Dashboard implements OnInit {
         this.apiService.getMedicos().subscribe(res => {
           if (res.success) this.datosCrud = res.data;
           this.cargando = false;
+          this.cdr.detectChanges();
         });
         break;
 
@@ -86,12 +104,14 @@ export class Dashboard implements OnInit {
         this.apiService.getCatalogoMedicamentos().subscribe(res => {
           if (res.success) this.datosCrud = res.data;
           this.cargando = false;
+          this.cdr.detectChanges();
         });
         break;
 
       case 'reportes':
       default:
         this.cargando = false;
+        this.cdr.detectChanges();
         break;
     }
   }

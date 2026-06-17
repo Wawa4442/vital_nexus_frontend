@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -28,7 +28,11 @@ export class Perfil implements OnInit {
     donadorOrganos: true
   };
 
-  constructor(private api: ApiService, private router: Router) {}
+  constructor(
+    private api: ApiService, 
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     if (typeof window === 'undefined') {
@@ -49,10 +53,12 @@ export class Perfil implements OnInit {
           this.mensajeError = 'No se pudo recuperar la información del perfil maestro.';
         }
         this.cargando = false;
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         this.mensajeError = 'Error de conexión con el nodo de la base de datos.';
         this.cargando = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -67,6 +73,7 @@ export class Perfil implements OnInit {
     setTimeout(() => {
       this.guardando = false;
       this.mensajeExito = `El perfil de supervivencia de ${this.pacienteInfo?.nombre} ha sido sincronizado en toda la red VITAL NEXUS.`;
+      this.cdr.detectChanges();
     }, 1500);
   }
 }

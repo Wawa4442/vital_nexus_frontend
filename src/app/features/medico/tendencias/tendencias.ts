@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ApiService } from '../../../core/api.service';
@@ -24,7 +24,11 @@ export class Tendencias implements OnInit {
     { fecha: 'Abr', sistolica: 120, diastolica: 80 }
   ];
 
-  constructor(private api: ApiService, private router: Router) {}
+  constructor(
+    private api: ApiService, 
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     if (typeof window === 'undefined') {
@@ -44,10 +48,12 @@ export class Tendencias implements OnInit {
           this.errorMensaje = 'No se encontró la información del paciente.';
         }
         this.cargando = false;
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         this.errorMensaje = 'Error al conectar con la base de datos distribuida.';
         this.cargando = false;
+        this.cdr.detectChanges();
       }
     });
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../core/api.service'; // Ajusta la ruta correcta
 
@@ -20,7 +20,10 @@ export class Nodos implements OnInit {
     { tabla: 'EXPEDIENTE', predicado: "M1 = motivo_consulta = 'Emergencia'", fragmento: 'F_Critico', nodoAsignado: 'Replicación Global (Todos)' }
   ];
 
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.cargarNodos();
@@ -45,10 +48,12 @@ export class Nodos implements OnInit {
           }));
         }
         this.cargando = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar nodos', err);
         this.cargando = false;
+        this.cdr.detectChanges();
       }
     });
   }

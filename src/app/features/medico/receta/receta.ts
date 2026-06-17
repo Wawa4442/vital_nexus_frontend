@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router'; // Importamos Router para la navegación
@@ -30,7 +30,11 @@ export class Receta implements OnInit {
     fecha_prescripcion: ''
   };
 
-  constructor(private api: ApiService, private router: Router) {}
+  constructor(
+    private api: ApiService, 
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     if (typeof window === 'undefined') {
@@ -41,6 +45,7 @@ export class Receta implements OnInit {
     if (!this.expedienteActivo) {
       // Si no hay expediente, detenemos la carga, la vista mostrará el mensaje de error
       this.cargandoCatalogo = false;
+      this.cdr.detectChanges();
       return;
     }
 
@@ -54,10 +59,12 @@ export class Receta implements OnInit {
           this.mensajeError = 'No se pudo cargar el catálogo de medicamentos.';
         }
         this.cargandoCatalogo = false;
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         this.mensajeError = 'Error de conexión al cargar el catálogo maestro.';
         this.cargandoCatalogo = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -91,10 +98,12 @@ export class Receta implements OnInit {
           this.mensajeError = res.message || 'Error al procesar la receta.';
         }
         this.guardando = false;
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         this.mensajeError = err.error?.message || 'Error de sincronización con el servidor central.';
         this.guardando = false;
+        this.cdr.detectChanges();
       }
     });
   }

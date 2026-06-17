@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -26,7 +26,11 @@ export class Consultas implements OnInit {
     motivo_consulta: ''
   };
 
-  constructor(private api: ApiService, private router: Router) {}
+  constructor(
+    private api: ApiService, 
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     if (typeof window === 'undefined') {
@@ -48,10 +52,12 @@ export class Consultas implements OnInit {
           this.error = 'Paciente no encontrado en la base de datos distribuida.';
         }
         this.cargando = false;
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         this.error = 'Error de conexión al recuperar el expediente.';
         this.cargando = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -81,10 +87,12 @@ export class Consultas implements OnInit {
           this.error = res.message || 'Error al guardar la consulta.';
           this.guardando = false;
         }
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         this.error = err.error?.message || 'Fallo de sincronización con el Nodo. Intente de nuevo.';
         this.guardando = false;
+        this.cdr.detectChanges();
       }
     });
   }
