@@ -33,6 +33,9 @@ export class Receta implements OnInit {
   constructor(private api: ApiService, private router: Router) {}
 
   ngOnInit() {
+    if (typeof window === 'undefined') {
+      return;
+    }
     this.expedienteActivo = localStorage.getItem('expediente_actual') || '';
 
     if (!this.expedienteActivo) {

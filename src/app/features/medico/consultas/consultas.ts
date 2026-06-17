@@ -29,6 +29,9 @@ export class Consultas implements OnInit {
   constructor(private api: ApiService, private router: Router) {}
 
   ngOnInit() {
+    if (typeof window === 'undefined') {
+      return;
+    }
     const nss = localStorage.getItem('paciente_nss');
     if(!nss) { 
       this.router.navigate(['/auth/portal']); 
